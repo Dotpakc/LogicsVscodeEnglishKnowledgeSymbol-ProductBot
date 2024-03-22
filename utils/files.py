@@ -18,7 +18,7 @@ def check_product_file(name):
     if not os.path.exists('data'):
         os.mkdir('data')
     if not os.path.exists(name):
-        write_to_file(name, [])
+        write_to_file(name, {})
 
 
 def get_products():
@@ -28,8 +28,20 @@ def get_products():
 
 def add_product(data: dict):
     products = get_products()
-    products.append(data)
+    products[data.get("id")] = data
     write_to_file(PRODUCT_FILE, products)
     
 
+def find_product(product_id):
+    products = get_products()
+    return products.get(product_id)
+    
+
+def del_product(product_id):
+    products = get_products()
+    if product_id in products:
+        del products[product_id]
+        write_to_file(PRODUCT_FILE, products)
+        return True
+    return False
     

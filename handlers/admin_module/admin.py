@@ -7,14 +7,14 @@ from aiogram.fsm.state import State, StatesGroup
 
 from decouple import config
 
+
+from states.adminStates import AdminStates, AddProductStates
+
 # from loader import bot
 
 admin_router = Router()
 
 
-class AdminStates(StatesGroup):
-    admin = State()
-    
 
 admin_main_kb = keyboard.InlineKeyboardBuilder()
 admin_main_kb.add(
@@ -37,3 +37,8 @@ async def help(message: types.Message, command: CommandObject, state: FSMContext
     await state.set_state(AdminStates.admin) # set state to admin
     await message.answer("You are admin", reply_markup=admin_main_kb.as_markup())
     
+    
+@admin_router.callback_query(F.data=="back_admin", State("*"))
+async def main_menu(call: types.CallbackQuery, state: FSMContext):
+    state.set_state(AdminStates.admin)
+    await call.message.edit_text("Main admin menu", reply_markup=admin_main_kb.as_markup()) 
