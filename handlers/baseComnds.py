@@ -3,6 +3,7 @@ from aiogram.filters import Command, CommandStart
 from aiogram.fsm.state import any_state
 
 from keyboards.main_user import main_user_kb, back_user_kb
+from utils.files import get_or_create_user
 
 
 main_router = Router()
@@ -12,7 +13,11 @@ main_router = Router()
 
 @main_router.message(CommandStart(), any_state)
 async def start(message: types.Message):
-    await message.answer("Вітаю! Я бот для замовлення їжі. Обирайте що вам потрібно", reply_markup=main_user_kb.as_markup())
+    user, created = get_or_create_user(message.from_user.id)
+    if created:
+        await message.answer("Вітаю! Я бот для замовлення їжі. Обирайте що вам потрібно", reply_markup=main_user_kb.as_markup())
+        return
+    await message.answer("Головне меню", reply_markup=main_user_kb.as_markup())
 
 @main_router.callback_query(F.data=="back_user", any_state)
 async def back_user(call: types.CallbackQuery):
