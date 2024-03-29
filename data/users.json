@@ -1,7 +1,10 @@
 {
     "222201019": {
         "id": 222201019,
-        "cart": [],
+        "cart": [
+            "ee21bf395aff40a6843db69840a2c6be",
+            "ee21bf395aff40a6843db69840a2c6be"
+        ],
         "orders": [],
         "bonus": 0
     },

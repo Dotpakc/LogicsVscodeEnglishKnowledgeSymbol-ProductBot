@@ -50,6 +50,22 @@ def del_product(product_id):
         return True
     return False
 
+def get_all_categories():
+    products = get_products()
+    categories = set()
+    for product in products.values():
+        categories.add(product.get("category"))
+    categories.add("all")
+    return categories
+
+def get_products_by_category(category):
+    products = get_products()
+    new_products = {}
+    for product_id, product in products.items():
+        if product.get("category") == category:
+            new_products[product_id] = product
+    return new_products
+
 ## Users
 USERS_FILE = 'data/users.json'
 
@@ -95,7 +111,7 @@ def get_or_create_user(user_id):
     if not user:
         user = {
             "id": user_id,
-            "cart": ["d9939f1b40884c33a50992d3da274b94","c0067648eaa548ba823dd988fe11c7ed"],
+            "cart": [],
             "orders": [],
             "bonus": 0
         }

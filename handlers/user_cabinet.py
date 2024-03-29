@@ -35,4 +35,20 @@ async def callback_clear_cart(call: types.CallbackQuery):
         text="Кошик очищено",
         reply_markup=main_user_kb.as_markup()
     )
+
+
+@main_router.callback_query(F.data.startswith("add_to_cart_"), any_state)
+async def callback_add_to_cart(call: types.CallbackQuery):
+    product_id = call.data.split("_")[-1]
+    user, _ = get_or_create_user(call.from_user.id)
+    cart = user.get("cart", [])
+    cart.append(product_id)
+    user["cart"] = cart
+    change_user(call.from_user.id, user)
+    await call.answer("Товар додано в кошик", show_alert=True)
+    await call.message.answer(
+        text="Товар додано в кошик",
+        reply_markup=main_user_kb.as_markup()
+    )
+    await call.message.delete()
     

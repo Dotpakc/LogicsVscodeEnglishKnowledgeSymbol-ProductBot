@@ -45,8 +45,40 @@ basket_kb.row(
     back_user_kb_btn
 )
 
+
+def get_product_kb(cart, product_id):
+    # Додати в кошик
+    # if product in cart -> Видалити з кошика
+    # лінк на сайт
+    # Назад
+    
+    product_kb = keyboard.InlineKeyboardBuilder()
+    
+    if product_id in cart:
+        product_kb.add(
+            keyboard.InlineKeyboardButton(text="🗑️ Видалити з кошика", callback_data=f"remove_from_cart_{product_id}")
+        )
+    else:
+        product_kb.add(
+            keyboard.InlineKeyboardButton(text="🛒 Додати в кошик", callback_data=f"add_to_cart_{product_id}")
+        )
+        
+    # product_kb.add(
+    #     keyboard.InlineKeyboardButton(text="🔗 Перейти на сайт", url=product['url'])
+    # )
+    
+    product_kb.add(
+        back_user_kb_btn
+    )
+    
+    return product_kb
+
+
+
+
+
 #Products kb list
-def get_products_kb(products, products_len, page=0, per_page=5):
+def get_products_kb(products, products_len, page=0, per_page=5, categories=None):
     products_kb = keyboard.InlineKeyboardBuilder()
     
     if page > 0:
@@ -63,10 +95,20 @@ def get_products_kb(products, products_len, page=0, per_page=5):
     
     products_kb.row(
         *[
-            keyboard.InlineKeyboardButton(text=f"{i}", callback_data=f"product_{product[0]}") 
+            keyboard.InlineKeyboardButton(text=f"{i}", callback_data=f"product_view_{product[0]}") 
             for i, product in enumerate(products, page * per_page + 1) 
         ]
     )
+    
+    if categories:
+        products_kb.row(
+            *[
+                keyboard.InlineKeyboardButton(text=f"{category}", callback_data=f"category_{category}") 
+                for category in categories
+            ]
+        )
+    
+    
     products_kb.row(
         keyboard.InlineKeyboardButton(text="👈 Назад", callback_data="back_user"),
     )
